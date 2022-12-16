@@ -3,7 +3,7 @@
         <div class="m-auto max-w-4xl py-16 flex justify-between items-center text-white">
             <div class="flex flex-col gap-10 items-end">
                 <a href="/">
-                    <FooterLogo /> 
+                    <img class="h-32" src="../../../assets/footerLogo.png" />
                 </a>
                 <h2 class="p-2 rounded-md bg-white text-blue-400 text-xl font-bold">Hi hey@mailinator.com!</h2>
             </div>     
@@ -41,7 +41,6 @@
 </template>
 
 <script>
-import FooterLogo from "../../../assets/footerLogo.vue";
 
 export default {
     data() {
@@ -49,7 +48,7 @@ export default {
             show: false,
         };
     },
-    components: { FooterLogo }
+    components: { }
 };
 </script>
 

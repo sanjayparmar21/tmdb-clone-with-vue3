@@ -13,14 +13,16 @@
 export default {
     name: "Card",
 
-    props: {
-        list: {type: Array},
-    },
     data() {
         return {
             prefix: "",
         }
     },
+
+    props: {
+        list: { type: Array },
+    },
+    
     methods: {
         // clickMe(id) {
         //     this.$router.push(`/${id}`);
