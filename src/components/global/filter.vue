@@ -1,7 +1,7 @@
 <template>
     <section class="fixed w-64">
         <div class="p-2 rounded-lg border shadow-xl my-2 border-gray-400 font-semibold bg-white">
-            Sort:{{ $store.state.favBtnClick }}
+            Sort:
             <span class="relative inset-0 ml-10 p-2 py-[9px] w-full border border-gray-400 rounded-md cursor-pointer" :class="this.titleForSorting === 'Ascending' || this.titleForSorting === 'Descending'
             ? 'bg-gradient-to-r from-yellow-200 to-red-400 text-red-900'
             : 'bg-gradient-to-r from-green-200 to-blue-400'" @click="changeSorting">
@@ -11,8 +11,11 @@
         <!-- component for genre filtering -->
         <div class="p-2 rounded-lg border shadow-xl my-4 border-gray-400 font-semibold bg-white">
             Filters With Genre:
-            <div v-if="this.activeBtn" class="p-[6px] mb-2 border border-gray-400 rounded-md cursor-pointer text-center
-                                bg-gradient-to-r from-yellow-200 to-red-400 text-red-900" @click="filterData('')">
+            <div 
+                v-if="this.activeBtn" 
+                class="p-[6px] mb-2 border border-gray-400 rounded-md cursor-pointer text-center bg-gradient-to-r from-yellow-200 to-red-400 text-red-900" 
+                @click="filterData('')"
+                >
                 Clear Filter
             </div>
             <div class="flex flex-wrap gap-2 max-w-md">
@@ -28,7 +31,7 @@
             Filters With Time:
             <article v-if="$route.path === '/movieList'">
                 <div v-for="item in movieFilterArray" class="my-2 p-2 py-[9px] w-full border border-gray-400 rounded-md cursor-pointer"
-                    :class="tempData === item.id
+                    :class="tempId === item.id
                     ? 'bg-gradient-to-r from-yellow-200 to-red-400 text-red-900'
                     : 'bg-gradient-to-r from-green-200 to-blue-400'" @click="filtersWithTime(item.url, item.id)">
                     {{item.name}}
@@ -41,7 +44,7 @@
             </article>
             <article v-else>
                 <div v-for="item in tvFilterArray" class="my-2 p-2 py-[9px] w-full border border-gray-400 rounded-md cursor-pointer"
-                    :class="tempData === item.id
+                    :class="tempId === item.id
                     ? 'bg-gradient-to-r from-yellow-200 to-red-400 text-red-900'
                     : 'bg-gradient-to-r from-green-200 to-blue-400'" @click="filtersWithTime(item.url, item.id)">
                     {{item.name}}
@@ -69,7 +72,7 @@ export default {
         const route = useRoute();
         return {
             route,
-            tempData: '',
+            tempId: '',
             list: [],
             genreList: [],
             movieFilterArray: [
@@ -94,22 +97,36 @@ export default {
         }
     },
 
-
     methods: {
         // filters With Time buttons
         filtersWithTime(name, id) {
-            this.$store.dispatch('toggleTimeFilter', 'true');
             this.favMovie = false;
+            this.favTV = false;
 
-            if (this.tempData === id){
-                this.tempData = '';
+            if (this.tempId === id){
+                this.tempId = '';
                 this.getInitialList();
             } else {
-                this.tempData = id;
+                this.tempId = id;
                 axios.get(`${import.meta.env.VITE_API_URL}/${name}?api_key=${import.meta.env.VITE_API_KEY}&language=en-US&page=1`)
                     .then(response => {
                         this.list = response.data.results;
                         this.$store.dispatch('selectedMovieList', this.list);
+
+                        window.onscroll = () => {
+                            let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
+                            if (bottomOfWindow) {
+                                this.page += 1
+                                axios.get(`${import.meta.env.VITE_API_URL}/${name}?api_key=${import.meta.env.VITE_API_KEY}&language=en-US&page=${this.page}`)
+                                    .then(response => {
+                                        this.list = this.list.concat(response.data.results);
+                                        this.$store.dispatch('selectedMovieList', this.list);
+                                    })
+                                    .catch(error => console.log(error))
+                                    .finally(() => this.loading = false);
+                            }
+                        }
+
                     })
                     .catch(error => console.log(error))
                     .finally(() => this.loading = false);
@@ -214,6 +231,20 @@ export default {
                             const responseData = response.data.results;
                             this.list = responseData.filter(finalData => finalData.genre_ids.includes(id))
                             this.$store.dispatch('selectedMovieList', this.list);
+                            
+                            window.onscroll = () => {
+                                let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
+                                if (bottomOfWindow || (this.list.length < 10)) {
+                                    page += 1;
+                                    axios.get(`${import.meta.env.VITE_API_URL}/movie/popular?api_key=${import.meta.env.VITE_API_KEY}&language=en-US&page=${page}`)
+                                        .then(response => {
+                                            const responseData = response.data.results;
+                                            this.list = this.list.concat(responseData.filter(finalData => finalData.genre_ids.includes(id)))
+                                            this.$store.dispatch('selectedMovieList', this.list);
+                                        })
+                                }
+                            }
+
                         })
                         .catch(error => console.log(error))
                         .finally(() => this.loading = false);
@@ -227,6 +258,19 @@ export default {
                             const responseData = response.data.results;
                             this.list = responseData.filter(finalData => finalData.genre_ids.includes(id))
                             this.$store.dispatch('selectedMovieList', this.list);
+
+                            window.onscroll = () => {
+                                let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
+                                if (bottomOfWindow || (this.list.length < 10)) {
+                                    page += 1;
+                                    axios.get(`${import.meta.env.VITE_API_URL}/tv/popular?api_key=${import.meta.env.VITE_API_KEY}&language=en-US&page=${page}`)
+                                        .then(response => {
+                                            const responseData = response.data.results;
+                                            this.list = this.list.concat(responseData.filter(finalData => finalData.genre_ids.includes(id)))
+                                            this.$store.dispatch('selectedMovieList', this.list);
+                                        })
+                                }
+                            }
                         })
                         .catch(error => console.log(error))
                         .finally(() => this.loading = false);
@@ -234,34 +278,34 @@ export default {
                     this.getInitialList();
                 }
             }
-            
         },
-        getNextList() {
-            window.onscroll = () => {
-                // alert("on scroll")
-                let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
-                // console.log(bottomOfWindow);
-                if (bottomOfWindow && this.$store.state.filterId) {
-                    this.page += 1;
-                    axios.get(`${import.meta.env.VITE_API_URL}/movie/popular?api_key=${import.meta.env.VITE_API_KEY}&language=en-US&page=${this.page}`)
-                        .then(response => {
-                            if (this.$store.state.filterId) {
-                                const responseData = response.data.results;
-                                this.list = this.list.concat(responseData.filter(finalData => finalData.genre_ids.includes(this.$store.state.filterId)))
-                                this.$store.dispatch('selectedMovieList', this.list);
-                            } else {
-                                this.list = this.list.concat(response.data.results);
-                                this.$store.dispatch('selectedMovieList', this.list);
-                            }
-                        })
-                        .catch(error => console.log(error))
-                        .finally(() => this.loading = false);
-                }
-            }
-        },
+        // getNextList() {
+        //     window.onscroll = () => {
+        //         let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
+        //         if (bottomOfWindow && this.$store.state.filterId && !this.favMovie && !this.favTV) {
+        //             alert("inside Filter");
+        //             this.page += 1;
+        //             axios.get(`${import.meta.env.VITE_API_URL}/movie/popular?api_key=${import.meta.env.VITE_API_KEY}&language=en-US&page=${this.page}`)
+        //                 .then(response => {
+        //                     if (this.$store.state.filterId) {
+        //                         const responseData = response.data.results;
+        //                         this.list = this.list.concat(responseData.filter(finalData => finalData.genre_ids.includes(this.$store.state.filterId)))
+        //                         this.$store.dispatch('selectedMovieList', this.list);
+        //                     } else {
+        //                         this.list = this.list.concat(response.data.results);
+        //                         this.$store.dispatch('selectedMovieList', this.list);
+        //                     }
+        //                 })
+        //                 .catch(error => console.log(error))
+        //                 .finally(() => this.loading = false);
+        //         }
+        //     }
+        // },
         // function for get favorite Movie list
         async getFavMovie() {
-            this.tempData = '';
+            this.$store.dispatch('toggleFavFilter');
+
+            this.tempId = '';
             this.favMovie = true;
 
             let uid = localStorage.getItem('uid');
@@ -291,7 +335,9 @@ export default {
         },
         // function for get favorite TV list
         async getFavTV() {
-            this.tempData = '';
+            this.$store.dispatch('toggleFavFilter');
+
+            this.tempId = '';
             this.favTV = true;
 
             let uid = localStorage.getItem('uid');
@@ -319,13 +365,6 @@ export default {
                 console.log("No such document!");
             }
         },
-        // temp fun
-        onFavMovieClick() {
-            this.getFavMovie();
-        },
-        onFavTVClick() {
-            this.getFavTV();
-        },
     },
 
     beforeMount() {
@@ -333,22 +372,9 @@ export default {
     },
 
     mounted() {
-        this.getNextList();
-        // this.filtersWithTime;
+        // this.getNextList();
     },
-    
-    updated() {
-        // this.getFavMovie();
-        // this.getFavTV();
-        // this.onFavMovieClick();
-        // this.onFavTVClick();
-    }
-    // async updated() {
-        // let uid = localStorage.getItem('uid');
-        // const docRef = doc(db.db, "favoriteMovieId", uid);
-        // const docSnap = await getDoc(docRef);
-        // this.dataFromFirebase = docSnap.data()?.favMovieId;
-    // },
+
 }
 </script>
 

@@ -14,11 +14,9 @@
                 <div v-if="loading" class="m-auto">
                     <img class="h-20 m-auto" src="../assets/loadingGif.gif" alt="loading.." />
                 </div>
-                <!-- {{ this.$store.state.listOfMovies }} -->
                 <div v-if="list.length === 0" class="font-semibold text-2xl text-blue-600 w-full text-center">
                     Sorry, Movie series is not available, check again after some times.
                 </div>
-                <!-- <div v-else v-for="item in list" :key="item.id" class="relative"> -->
                 <div v-else v-for="item in this.$store.state.listOfMovies" :key="item.id" class="relative">
                     <div v-if="item.poster_path" class="w-60">
                         <img :src="prefix + item.poster_path" alt="banner"
@@ -94,8 +92,8 @@ export default {
         getNextList() {
             window.onscroll = () => {
                 let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
-                if (bottomOfWindow && this.searchData === '' && this.$store.state.filterId === "" && this.$store.state.isTimeFilter === "") {
-                    // alert("1");
+                if (bottomOfWindow && this.searchData === '' && this.$store.state.filterId === "" && !this.$store.state.isFavFilter) {
+                    alert("from movie");
                     this.page += 1;
                     axios.get(`${import.meta.env.VITE_API_URL}/movie/popular?api_key=${import.meta.env.VITE_API_KEY}&language=en-US&page=${this.page}`)
                         .then(response => {
@@ -104,96 +102,7 @@ export default {
                         })
                         .catch(error => console.log(error))
                         .finally(() => this.loading = false);
-                }
-                // alert(this.list.length)
-                // if (this.list.length < 20 && this.$store.state.filterId !== "") {
-                //     // alert(this.$store.state.filterId);
-                //     this.page += 1;
-                //     axios.get(`${import.meta.env.VITE_API_URL}/movie/popular?api_key=${import.meta.env.VITE_API_KEY}&language=en-US&page=${this.page}`)
-                //         .then(response => {
-                //             // if (this.page === 2) {
-                //             //     this.list = [];
-                //             // }
-                //             const responseData = response.data.results;
-                //             this.list = this.list.concat(responseData.filter(finalData => finalData.genre_ids.includes(this.$store.state.filterId)))
-                //             this.$store.dispatch('selectedMovieList', this.list);
-                //         })
-                //         .catch(error => console.log(error))
-                //         .finally(() => this.loading = false);
-                // }
-                // if (bottomOfWindow && this.$store.state.filterId){
-                //     // alert(this.$store.state.filterId);
-                //     this.page += 1;
-                //     axios.get(`${import.meta.env.VITE_API_URL}/movie/popular?api_key=${import.meta.env.VITE_API_KEY}&language=en-US&page=${this.page}`)
-                //         .then(response => {
-                //             // if (this.page === 2) {
-                //             //     this.list = [];
-                //             // }
-                //             const responseData = response.data.results;
-                //             this.list = this.list.concat(responseData.filter(finalData => finalData.genre_ids.includes(this.$store.state.filterId)))
-                //             this.$store.dispatch('selectedMovieList', this.list);
-                //         })
-                //         .catch(error => console.log(error))
-                //         .finally(() => this.loading = false);
-                // }
-
-                // else if ((bottomOfWindow || this.list.length < 20) && this.searchData === '' && this.$store.state.filterId !== "") {
-                //     // alert("2");
-                //     this.page += 1;
-                //     axios.get(`${import.meta.env.VITE_API_URL}/movie/popular?api_key=${import.meta.env.VITE_API_KEY}&language=en-US&page=${this.page}`)
-                //         .then(response => {
-                //             if (this.activeBtn) {
-                //                 const responseData = response.data.results;
-                //                 this.list = this.list.concat(responseData.filter(finalData => finalData.genre_ids.includes(this.activeBtn)))
-                //                 this.$store.dispatch('selectedMovieList', this.list);
-                //             } else {
-                //                 this.list = this.list.concat(response.data.results);
-                //                 this.$store.dispatch('selectedMovieList', this.list);
-                //             }
-                //         })
-                //         .catch(error => console.log(error))
-                //         .finally(() => this.loading = false);
-                // }
-
-                // else if(bottomOfWindow && this.$store.state.filterId !== "") {
-                //     // alert("3");
-                //     this.page += 1;
-                //     axios.get(`${import.meta.env.VITE_API_URL}/movie/popular?api_key=${import.meta.env.VITE_API_KEY}&language=en-US&page=${this.page}`)
-                //         .then(response => {
-                //             if (this.$store.state.filterId) {
-                //                 const responseData = response.data.results;
-                //                 if(this.page === 2){
-                //                     this.list = [];
-                //                 }
-                //                 this.list = this.list.concat(responseData.filter(finalData => finalData.genre_ids.includes(this.$store.state.filterId)))
-                //                 this.$store.dispatch('selectedMovieList', this.list);
-                //             } else {
-                //                 this.list = this.list.concat(response.data.results);
-                //                 this.$store.dispatch('selectedMovieList', this.list);
-                //             }
-                //         })
-                //         .catch(error => console.log(error))
-                //         .finally(() => this.loading = false);
-                // }
-
-                // else if (bottomOfWindow){
-                //     // alert("else");
-                //     this.page += 1;
-                //     axios.get(`${import.meta.env.VITE_API_URL}/movie/popular?api_key=${import.meta.env.VITE_API_KEY}&language=en-US&page=${this.page}`)
-                //         .then(response => {
-                //             if (this.activeBtn) {
-                //                 const responseData = response.data.results;
-                //                 this.list = this.list.concat(responseData.filter(finalData => finalData.genre_ids.includes(this.activeBtn)))
-                //                 this.$store.dispatch('selectedMovieList', this.list);
-                //             } else {
-                //                 this.list = this.list.concat(response.data.results);
-                //                 this.$store.dispatch('selectedMovieList', this.list);
-                //             }
-                //         })
-                //         .catch(error => console.log(error))
-                //         .finally(() => this.loading = false);
-                // }
-                
+                }                
             }
         },
         // function fot searching
@@ -231,6 +140,7 @@ export default {
                         await updateDoc(doc(db.db, "favoriteMovieId", uid), {
                             favMovieId: arrayRemove(this.newId)
                         });
+                        this.getFavMovie();
                     }
                     else {
                         await updateDoc(doc(db.db, "favoriteMovieId", uid), {
@@ -242,37 +152,6 @@ export default {
                 this.$store.dispatch('toggleLoginModal');
             }
         },
-        // old and working
-        // async addToFav(id) {
-        //     if (localStorage.getItem('uid')) {
-        //         let uid = localStorage.getItem('uid');
-        //         this.newId = id;
-
-        //         const docRef = doc(db.db, "favoriteMovieId", uid);
-        //         const docSnap = await getDoc(docRef);
-
-        //         let lengthOfFavMovie = docSnap.data()?.favMovieId?.length;
-
-        //         if (lengthOfFavMovie === 0 || lengthOfFavMovie === undefined) {
-        //             await setDoc(doc(db.db, "favoriteMovieId", uid), {
-        //                 favMovieId: arrayUnion(this.newId)
-        //             });
-        //         } else {
-        //             if (docSnap.data().favMovieId.includes(this.newId)) {
-        //                 await updateDoc(doc(db.db, "favoriteMovieId", uid), {
-        //                     favMovieId: arrayRemove(this.newId)
-        //                 });
-        //             }
-        //             else {
-        //                 await updateDoc(doc(db.db, "favoriteMovieId", uid), {
-        //                     favMovieId: arrayUnion(this.newId)
-        //                 });
-        //             }
-        //         }
-        //     } else {
-        //         this.$store.dispatch('toggleLoginModal');
-        //     }
-        // },
         // function for get favorite Movie list
         async getFavMovie() {
             let uid = localStorage.getItem('uid');

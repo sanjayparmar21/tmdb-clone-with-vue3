@@ -1,5 +1,5 @@
 <template>
-    <div class="max-w-7xl m-auto py-5">
+    <div class="max-w-7xl m-auto py-5 shadow-lg rounded">
         <h3 class="text-2xl font-semibold">What's Popular in Movies:</h3>
         <div v-if="loading">
             <img class="h-20 m-auto" src="../assets/loadingGif.gif" alt="loading.." />

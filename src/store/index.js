@@ -9,9 +9,8 @@ const store = createStore({
     loginModal: false,
     movieId: "",
     filterId: "",
-    isTimeFilter: "",
     listOfMovies: [],
-    favBtnClick: false,
+    isFavFilter: false,
   },
   // getters methods are use for getting value of function like, {{ $store.getters.selectedId }}
   getters: {
@@ -44,11 +43,8 @@ const store = createStore({
     SELECTED_FILTER_ID(state, filterId) {
       state.filterId = filterId;
     },
-    TOGGLE_TIME_FILTER(state, isTimeFilter) {
-      state.isTimeFilter = isTimeFilter;
-    },
-    TOGGLE_FAV_BTN(state) {
-      state.favBtnClick = !state.favBtnClick;
+    TOGGLE_FAV_FILTER(state) {
+      state.isFavFilter = !state.isFavFilter;
     },
   },
   actions: {
@@ -70,11 +66,8 @@ const store = createStore({
     selectedFilterId({ commit }, filterId) {
       commit("SELECTED_FILTER_ID", filterId);
     },
-    toggleTimeFilter({ commit }, isTimeFilter) {
-      commit("TOGGLE_TIME_FILTER", isTimeFilter);
-    },
-    toggleFavBtn({ commit }) {
-      commit("TOGGLE_FAV_BTN");
+    toggleFavFilter({ commit }) {
+      commit("TOGGLE_FAV_FILTER");
     },
   },
 });

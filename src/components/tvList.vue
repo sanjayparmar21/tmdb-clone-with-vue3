@@ -88,7 +88,7 @@ export default {
         getNextList() {
             window.onscroll = () => {
                 let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
-                if ((bottomOfWindow || this.list.length < 20) && this.searchData === '') {
+                if (bottomOfWindow && this.searchData === '' && this.$store.state.filterId === "" && !this.$store.state.isFavFilter) {
                     this.page += 1;
                     axios.get(`${import.meta.env.VITE_API_URL}/tv/popular?api_key=${import.meta.env.VITE_API_KEY}&language=en-US&page=${this.page}`)
                         .then(response => {
@@ -141,6 +141,7 @@ export default {
                         await updateDoc(doc(db.db, "favoriteTVId", uid), {
                             favTVId: arrayRemove(this.newId)
                         });
+                        this.getFavTV();
                     }
                     else {
                         await updateDoc(doc(db.db, "favoriteTVId", uid), {
@@ -165,9 +166,11 @@ export default {
                         .then(response => {
                             if (index === 0) {
                                 this.list = [];
-                                this.list.push(response.data)
+                                this.list.push(response.data);
+                                this.$store.dispatch('selectedMovieList', this.list);
                             } else {
-                                this.list.push(response.data)
+                                this.list.push(response.data);
+                                this.$store.dispatch('selectedMovieList', this.list);
                             }
                         })
                         .catch(error => console.log(error))

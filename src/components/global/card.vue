@@ -1,8 +1,8 @@
 <template>
-    <div class="flex flex-nowrap gap-4 py-2 overflow-auto maskImage">
+    <div class="flex flex-nowrap gap-4 py-2 overflow-auto maskImage scroll-smooth">
         <div class="temp" v-for="item in list" :key="item.id">
             <div class="w-40">                
-                <img :src="prefix + item.poster_path" alt="banner" class="cursor-pointer rounded-xl skeleton" @click=clickMe(item.id) />
+                <img :src="prefix + item.poster_path" alt="banner" class="cursor-pointer rounded-xl skeleton" />
             </div>
             <h3 class="text-lg font-semibold w-40 truncate cursor-default">{{ item.title ? item.title : item.name }}</h3>
         </div>
@@ -23,11 +23,6 @@ export default {
         list: { type: Array },
     },
     
-    methods: {
-        // clickMe(id) {
-        //     this.$router.push(`/${id}`);
-        // },
-    },
     mounted() {
         this.prefix = `${import.meta.env.VITE_API_IMAGE_PREFIX}`
     }

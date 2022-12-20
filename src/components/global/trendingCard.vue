@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-nowrap gap-4 py-2 overflow-auto maskImage">
+    <div class="flex flex-nowrap gap-4 py-2 overflow-auto scroll-smooth maskImage">
         <div class="temp" v-for="item in list" :key="item.id">
             <div class="h-60 w-96">
                 <img 

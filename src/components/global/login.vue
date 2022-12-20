@@ -54,6 +54,13 @@ export default{
                 console.log(error);
             });
         }
+    },
+
+    mounted() {
+        let uid = localStorage.getItem("uid");
+        if(uid) {
+            this.$store.dispatch('setLoggedIn');
+        }
     }
 }
 </script>

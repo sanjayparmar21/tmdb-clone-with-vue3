@@ -2,7 +2,7 @@
     <Navbar />
     <article class="pt-14">
         <Banner />
-        <!-- <Tab /> -->
+        <Tab />
         <PopularMovie />
         <PopularTV />
         <Trending />
@@ -11,9 +11,9 @@
 </template>
 
 <script>
-    // import Tab from "../components/global/tab.vue"
     import Navbar from "../components/global/header/navbar.vue";
     import Banner from "../components/banner.vue";
+    import Tab from "../components/global/tab.vue"
     import PopularMovie from "../components/popularMovie.vue";
     import PopularTV from "../components/popularTV.vue";
     import Trending from "../components/inTrending.vue";
@@ -27,9 +27,9 @@
             }
         },
         components: {
-            // Tab,
             Navbar,
             Banner,
+            Tab,
             PopularMovie,
             PopularTV,
             Trending,

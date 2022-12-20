@@ -35,7 +35,7 @@ export default {
         const route = useRoute();
         this.prefix = `${import.meta.env.VITE_API_IMAGE_PREFIX}`;
 
-        await axios.get(`${import.meta.env.VITE_API_URL}/tv/${route.params.TVDetails}/recommendations?api_key=${import.meta.env.VITE_API_KEY}&language=en-US`)
+        await axios.get(`${import.meta.env.VITE_API_URL}/tv/${this.$store.state.movieId}/recommendations?api_key=${import.meta.env.VITE_API_KEY}&language=en-US`)
             .then(response => this.list = response.data.results)
             .catch(error => console.log(error))
             .finally(() => this.loading = false);

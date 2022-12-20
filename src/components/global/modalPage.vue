@@ -4,6 +4,7 @@
             <section v-if="$route.path === '/movieList'" :style="{ backgroundImage: `url(${this.prefix + details.backdrop_path})` }"
                 class="bg-cover z-10 text-white bg-slate-100 max-w-5xl fixed right-0 top-14 bottom-0 rounded-tl-xl rounded-bl-xl">
                 <section class="bg-black bg-opacity-40 min-h-full rounded-tl-xl rounded-bl-xl">
+                    <RecommendationTV />
                     <article class="justify-center block sm:flex items-start max-w-7xl m-auto rounded-tl-xl p-6">
                         <img :src="prefix + details.poster_path" alt="banner" class="max-h-[20rem] sm:h-96 rounded-lg m-auto skeleton-for-image" />
                         <article class="ml-10">
@@ -189,6 +190,7 @@
                             </ul>
                         </section>
                     </article>
+                    <!-- <RecommendationTV /> -->
                 </section>
             </section>
         </section>
@@ -201,6 +203,7 @@ import ViewMore from '../../assets/viewMore.vue';
 import Heart from '../../assets/heart.vue';
 import Bookmark from '../../assets/bookmark.vue';
 import Star from '../../assets/star.vue';
+import RecommendationTV from "../recommendationTV.vue";
 
 export default {
     name: "Modal",
@@ -238,8 +241,12 @@ export default {
         this.getDataById();
     },
     components: {
-        ViewMore, Heart, Bookmark, Star
-    },
+    ViewMore,
+    Heart,
+    Bookmark,
+    Star,
+    RecommendationTV
+},
 }
 </script>
 

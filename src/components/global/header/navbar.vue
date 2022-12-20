@@ -28,7 +28,9 @@
                 <!-- <Plus /> -->
                 <button class="border border-white px-1 hover:text-slate-800 hover:bg-white">En</button>
                 <Bell />
-                <Logout />
+                <button v-if="this.$store.state.user.loggedIn" @click="logout">
+                    <Logout />
+                </button>
                 <!-- <button class="py-1 px-3 rounded-full bg-orange-400 text-white">H</button> -->
             </div>
         </div>
@@ -37,6 +39,12 @@
 </template>
 
 <script>
+
+import firebaseConfig from "../../../firebaseConfig";
+import { getAuth, signOut } from "firebase/auth";
+firebaseConfig
+const auth = getAuth();
+
 import Plus from "../../../assets/plus.vue";
 import Bell from "../../../assets/bell.vue";
 import Logout from "../../../assets/logout.vue";
@@ -46,9 +54,29 @@ import { RouterLink, RouterView } from 'vue-router';
 export default {
     data() {
         return {
-           
+           name: "Navbar",
         };
     },
+
+    methods: {
+        logout() {
+            signOut(auth).then(() => {
+                this.$store.dispatch('setLoggedOut');
+                localStorage.removeItem("uid");
+                console.log("logged out successfully");
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+    },
+
+    mounted() {
+        let uid = localStorage.getItem("uid");
+        if (uid) {
+            this.$store.dispatch('setLoggedIn');
+        }
+    },
+
     components: { Plus, Bell, Logout, Dropdown }
 };
 </script>
