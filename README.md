@@ -27,3 +27,12 @@ npm run dev
 ```sh
 npm run build
 ```
+
+## Home Page:
+![fullIndex](https://user-images.githubusercontent.com/109661571/208644987-002fbb41-7ec2-4b5f-9972-71aee1cce52f.png)
+
+## Movie Page:
+![fullMovie](https://user-images.githubusercontent.com/109661571/208644883-c2381bb7-e199-4e5e-a3b2-849557feba7d.png)
+
+## TV Page:
+![fullTV](https://user-images.githubusercontent.com/109661571/208644963-e5f1f8ab-eff0-46f6-88de-c3e8627b5135.png)
